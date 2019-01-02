@@ -50,18 +50,18 @@ enum Orientation orientation = RIGHT;
 /*
 Explication de la variable decaleDeCentre
 
-	1   _	  2  _ _ 
-		|  |     l_ _ l
-		|_|
+	1   _	 2  _ _ 
+           | |     |_ _|
+	   |_|
 		
-Le point où la carte dessine la voiture commence à 1 (si elle est verticale) ou 2 (si elle est horizontale)
-Pour passer de 1 à 2 (quand la voiture tourne), on faire lAbsicisse - decaleDeCentre, lOrdonnee + decaleDeCentre.
+Le point oÃ¹ la carte dessine la voiture commence Ã  1 (si elle est verticale) ou 2 (si elle est horizontale)
+Pour passer de 1 Ã  2 (quand la voiture tourne), on faire lAbsicisse - decaleDeCentre, lOrdonnee + decaleDeCentre.
 */
 float decaleDeCentre = (LARGEUR_VOITURE - HAUTEUR_VOITURE)/2.f;
 bool directionChange = false; //quand la voiture tourne, directionChange = true
 struct Compteur compteur; // compteur pour gerer le rebondissement pour chaque 
 struct Coordonnee changementCoor; //variable pour determiner l'avancement de la voiture en fonction de sa direction.
-bool vitesseChange = true; // chaque fois il y a un changement de vitesse (par exemple si on passe de 2 à 3), vitesseChange = true
+bool vitesseChange = true; // chaque fois il y a un changement de vitesse (par exemple si on passe de 2 Ã  3), vitesseChange = true
 unsigned long aPixelIdMur[3000]; // un array pour stocker les positions des obstacles "Mur", pour qu'on puisse les detecte
 int indexAMur = 0; // la vraie taille de aPixelIdMur
 
@@ -79,7 +79,7 @@ int main (void) {
 	changementCoor.abscisse = 1;
 	changementCoor.ordonnee = 0;
 	
-	//initialization d'écran
+	//initialization d'Ã©cran
   GLCD_Initialize();                          /* Initialize graphical LCD display   */
   GLCD_SetBackgroundColor(GLCD_COLOR_BLACK);
 	GLCD_SetForegroundColor(GLCD_COLOR_WHITE);
@@ -88,8 +88,8 @@ int main (void) {
 	//GLCD_DrawBitmap(lAbscisse,lOrdonnee,
 									//LARGEUR_VOITURE, HAUTEUR_VOITURE,
 									//(const unsigned char *)bmpyellowcarpngRight);
-	GLCD_FrameBufferAccess(true); // à faire avant appel à GLCD_DrawPixel et GLCD_ReadPixel pour supprimer
-																// les limitations d'accès à la SRAM (uniquement nécessaire sur les anciennes
+	GLCD_FrameBufferAccess(true); // Ã  faire avant appel Ã  GLCD_DrawPixel et GLCD_ReadPixel pour supprimer
+																// les limitations d'accÃ¨s Ã  la SRAM (uniquement nÃ©cessaire sur les anciennes
 																// cartes sinon les fonctions GLCD_DrawPixel et GLCD_ReadPixel ne 
 																// fonctionnent pas
 
@@ -130,8 +130,8 @@ void cfgTimer1(void) {
 	TIM1->PSC = 57;
 	TIM1->ARR = 64000;
 	TIM1->DIER |= UIE;
-	TIM1->CR1 |= 0x0001;			//Démarrage timer1
-	SETENA0 |= (1<<25); //SETENA0 ajout de l'interruption n°25 (cf TD3 page 2)
+	TIM1->CR1 |= 0x0001;			//DÃ©marrage timer1
+	SETENA0 |= (1<<25); //SETENA0 ajout de l'interruption nÂ°25 (cf TD3 page 2)
 	
 }
 
@@ -162,21 +162,21 @@ void cfgGPIO(void) {
   GPIOC->CRH = temp | 0x00400000;
 	
 	//---Configuration des ISR sur EXTI15 (JOYSTIK_UP)---
-	SETENA1 |= (1<<8); //SETENA1 ajout de l'interruption n°40 (32+8) pour activation EXTI15_10_IRQHandler
+	SETENA1 |= (1<<8); //SETENA1 ajout de l'interruption nÂ°40 (32+8) pour activation EXTI15_10_IRQHandler
 	temp = AFIO_EXTICR4 & 0x0FFF;
 	AFIO_EXTICR4 = temp | 0x6000;
 	EXTI->IMR |= (1<<15);
 	EXTI->FTSR |= (1<<15); //Event sur front descendant
 	
 	//---Configuration des ISR sur EXTI3 (JOYSTIK_DOWN)---
-	SETENA0 |= (1<<9); //SETENA0 ajout de l'interruption n°9 pour activation EXTI3_IRQHandler
+	SETENA0 |= (1<<9); //SETENA0 ajout de l'interruption nÂ°9 pour activation EXTI3_IRQHandler
 	temp = AFIO_EXTICR1 & 0x0FFF;
 	AFIO_EXTICR1 = temp | 0x3000;
 	EXTI->IMR |= (1<<3);
 	EXTI->FTSR |= (1<<3); //Event sur front descendant
 	
 	//---Configuration des ISR sur EXTI0 (BP_WAKEUP)---
-	SETENA0 |= (1<<6); //SETENA0 ajout de l'interruption n°6 pour activation EXTI0_IRQHandler
+	SETENA0 |= (1<<6); //SETENA0 ajout de l'interruption nÂ°6 pour activation EXTI0_IRQHandler
 	AFIO_EXTICR1 &= 0xFFF0;
 	EXTI->IMR |= (1<<0);
 	EXTI->RTSR |= (1<<0); //Event sur front montant
@@ -193,16 +193,16 @@ void TIM1_UP_TIM10_IRQHandler (void) {	//Timer1
 	{
 		TIM1->SR &= ~UIF;
 		
-		//ces compteurs servent à gerer la rebondissement des boutons. Quand on appuye, on reset le compteur. 
+		//ces compteurs servent Ã  gerer la rebondissement des boutons. Quand on appuye, on reset le compteur. 
 		if(compteur.wakeUp>0) compteur.wakeUp--;
 		if(compteur.tamper>0) compteur.tamper--;
 		if(compteur.joyStickUp>0) compteur.joyStickUp--;
 		if(compteur.joyStickDown>0) compteur.joyStickDown--;
 		
-		//empêcher la voiture sort de "l'écran"
+		//empÃªcher la voiture sort de "l'Ã©cran"
 		gererBord();
 		
-		//quand la voiture touche des obstacles, elle s'arrête
+		//quand la voiture touche des obstacles, elle s'arrÃªte
 		gererObstacles();
 		
 		//l'avancement de la voiture
@@ -263,7 +263,7 @@ void EXTI0_IRQHandler(void) {
 int resetCompteur(int vitessePixel){
 	  int compteurTemp;
 		if(vitessePixel == 0)
-			compteurTemp = 4; // unNombre * 0.05 = le temps d'attente avant qu'on peut appuyer les bouton pour une deuxieme fois. ça sert à empecher les rebondissements
+			compteurTemp = 4; // unNombre * 0.05 = le temps d'attente avant qu'on peut appuyer les bouton pour une deuxieme fois. Ã§a sert Ã  empecher les rebondissements
 		else
 			compteurTemp = 4*(renvoyeAbsolu(vitessePixel)/20); 	
 		return compteurTemp;
@@ -360,7 +360,7 @@ void dessinerVitesse(void){
 	}
 }
 void gererBord(void){
-	//pour que la voiture sort pas de l'écran
+	//pour que la voiture sort pas de l'Ã©cran
 	if((lAbscisse == GLCD_SIZE_Y-LARGEUR_VOITURE && changementCoor.abscisse > 0 && vitessePixel > 0) || 
 			(lAbscisse == GLCD_SIZE_Y-LARGEUR_VOITURE && changementCoor.abscisse < 0 && vitessePixel < 0) ||
 		  (lAbscisse == 0 && changementCoor.abscisse < 0 && vitessePixel > 0) ||
@@ -405,13 +405,13 @@ void dessinerRectangle(void){
 		
 		//pour effacer "la trace" de la voiture quand elle tourne
 		if(directionChange){
-			if(orientation == 1 || orientation == 3) {// ça veut dire elle vient de tourner de de la position verticale à la position horizontale
+			if(orientation == 1 || orientation == 3) {// Ã§a veut dire elle vient de tourner de de la position verticale Ã  la position horizontale
 				GLCD_DrawBargraph(lAbscisse+decaleDeCentre, lOrdonnee-decaleDeCentre, HAUTEUR_VOITURE, decaleDeCentre, 0x0000);
 				GLCD_DrawBargraph(lAbscisse+decaleDeCentre, lOrdonnee+HAUTEUR_VOITURE, HAUTEUR_VOITURE, decaleDeCentre, 0x0000);
 				GLCD_DrawBargraph(lAbscisse+decaleDeCentre-1, lOrdonnee-decaleDeCentre, 5, LARGEUR_VOITURE, 0x0000);
 				GLCD_DrawBargraph(lAbscisse+decaleDeCentre+HAUTEUR_VOITURE-2, lOrdonnee-decaleDeCentre, 5, LARGEUR_VOITURE, 0x0000);
 			}
-			else{ // ça veut dire elle vient de tourner de de la position horizontale à la position verticale
+			else{ // Ã§a veut dire elle vient de tourner de de la position horizontale Ã  la position verticale
 				GLCD_DrawBargraph(lAbscisse-decaleDeCentre, lOrdonnee+decaleDeCentre, decaleDeCentre, HAUTEUR_VOITURE, 0x0000);
 				GLCD_DrawBargraph(lAbscisse+HAUTEUR_VOITURE, lOrdonnee+decaleDeCentre, decaleDeCentre, HAUTEUR_VOITURE, 0x0000);
 				GLCD_DrawBargraph(lAbscisse-decaleDeCentre, lOrdonnee+decaleDeCentre-1, LARGEUR_VOITURE, 5, 0x0000);
@@ -437,7 +437,7 @@ struct Mur* newMur(int uneAbscisse, int uneOrdonnee, bool bHorizontal, int uneLo
 }
 
 void creerObstacles(void){
-	//Pour organiser la création des obstacles: Murs, Sangliers....
+	//Pour organiser la crÃ©ation des obstacles: Murs, Sangliers....
 	creerMurs();
 	//creerSangliers();
 }
@@ -475,13 +475,13 @@ void creerMurs(void){
 	storeEtDessineMur(murVert8);
 
 	//On arrange la collection contenant les pixelId de tous les murs ( pour qu'on puisse analyser la collection plus rapidement avec Binary Search)
-	//un pixelId est un id unique pour chaque pixel possible sur l'écran
+	//un pixelId est un id unique pour chaque pixel possible sur l'Ã©cran
 	sort(aPixelIdMur, indexAMur);
 
 }
 
 void storeEtDessineMur(struct Mur *unMur){
-	//un pixelId est un id unique pour chaque pixel possible sur l'écran
+	//un pixelId est un id unique pour chaque pixel possible sur l'Ã©cran
 	unsigned long pixelId;
 	
 	if(unMur->horizontal){
@@ -555,7 +555,7 @@ bool searchIdPixel(unsigned long array[], int sizeArray, int idPixelACherche){
 
 void gererObstacles(void){
 	//une fonction pour detecter si devant la voiture il y a un obstacle
-	//un pixelId est une id unique pour chaque pixel possible sur l'écran. Dans cette fonction on va prendre les pixelId devant la voiture, et les comparer avec les pixelId des obstacles (qui sont stockés dans des collections) 
+	//un pixelId est une id unique pour chaque pixel possible sur l'Ã©cran. Dans cette fonction on va prendre les pixelId devant la voiture, et les comparer avec les pixelId des obstacles (qui sont stockÃ©s dans des collections) 
 	int pixelIdAVerifier = 0;
 	int distanceFromObstacle = 2;
 	int i;
@@ -595,7 +595,7 @@ bool estImpossibleDeTourner(void){
 	bool impossibleDeTourner = false;
 	int i;
 	
-	// ça va dire elle veut tourner de vertical à position horizontal
+	// Ã§a va dire elle veut tourner de vertical Ã  position horizontal
 	if(orientation == 0 || orientation == 2){ 
 		
 		//les deux for loop detecte la front de la voiture
@@ -612,7 +612,7 @@ bool estImpossibleDeTourner(void){
   	}	
 	}	
 	
-	// ça va dire elle veut tourner de horizontal à position vertical	
+	// Ã§a va dire elle veut tourner de horizontal Ã  position vertical	
 	else{
 		//les deux for loop detecte la front de la voiture
 		for(i = 0; !impossibleDeTourner && i < decaleDeCentre; i++){ 
